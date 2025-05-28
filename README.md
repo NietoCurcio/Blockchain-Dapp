@@ -98,3 +98,19 @@ Deploy contracts::
 ```sh
 forge script script/Counter.s.sol:CounterScript --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast
 ```
+
+Deploy with `forge create` (without `forge script`):
+```sh
+forge create --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 src/RainInsurance.sol:RainInsurance --broadcast
+# [⠒] Compiling...
+# No files changed, compilation skipped
+# Deployer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+# Deployed to: 0x5FC8d32690cc91D4c39d9d3abcBD16989F875707
+# Transaction hash: 0x53208d1abc7169a1f7b5b5d5baab1978ef6496e9ef3e3e1401c7e68c45338db4
+```
+
+Call test function:
+```sh
+cast call 0x5FC8d32690cc91D4c39d9d3abcBD16989F875707 "testFunction()(string)" --rpc-url http://localhost:8545
+# "Hello, World!"
+```
