@@ -6,9 +6,20 @@ import "forge-std-1.9.7/console.sol";
 contract RainInsurance {
     address public owner;
 
+    struct GeoCoordinate {
+        int256 longitude; // Stored as fixed-point with 4 decimals (multiply by 10000)
+        int256 latitude; // Stored as fixed-point with 4 decimals (multiply by 10000)
+    }
+
+    int256[] public LATITUDES = [-228010, -230510];
+    // [-22.801, -23.051] * 10000
+    int256[] public LONGITUDES = [-438025, -435524, -433023];
+    // [-43.8025, -43.5524, -43.3023] * 10000
+
     struct RainRecord {
         uint256 timestamp;
-        string location;
+        int256 longitude;
+        int256 latitude;
         uint256 rainfallMM;
     }
 
@@ -28,7 +39,7 @@ contract RainInsurance {
         string location;
         uint256 minRainfallThreshold;
         uint256 maxRainfallThreshold;
-        uint256 premiumMultiplier; // For pricing calculation
+        uint256 premiumMultiplier;
         bool active;
     }
 
@@ -74,7 +85,8 @@ contract RainInsurance {
         rainRecordCount++;
         rainRecords[rainRecordCount] = RainRecord({
             timestamp: block.timestamp,
-            location: _location,
+            longitude: 0,
+            latitude: 0,
             rainfallMM: _rainfallMM
         });
 
@@ -144,8 +156,13 @@ contract RainInsurance {
         require(!policy.claimed, "Already claimed");
         require(block.timestamp > policy.endTime, "Policy not ended");
 
+        (int256 longitude, int256 latitude) = getCoordinatesFromLocation(
+            policy.location
+        );
+
         uint256 totalRainfall = getTotalRainfall(
-            policy.location,
+            longitude,
+            latitude,
             policy.startTime,
             policy.endTime
         );
@@ -160,22 +177,86 @@ contract RainInsurance {
         emit PolicyClaimed(_policyId, policy.farmer, policy.payout);
     }
 
+    function getCoordinatesFromLocation(
+        string memory location
+    ) public view returns (int256 longitude, int256 latitude) {
+        if (keccak256(bytes(location)) == keccak256(bytes("RJ-1"))) {
+            return (LONGITUDES[0], LATITUDES[0]);
+        } else if (keccak256(bytes(location)) == keccak256(bytes("RJ-2"))) {
+            return (LONGITUDES[1], LATITUDES[0]);
+        }
+
+        // TODO WE HAVE 6 points,  RJ-1 up to RJ-6
+
+        return (LONGITUDES[0], LATITUDES[0]);
+    }
+
     function getTotalRainfall(
-        string memory _location,
+        int256 _longitude,
+        int256 _latitude,
         uint256 _startTime,
         uint256 _endTime
     ) public view returns (uint256 total) {
         for (uint256 i = 1; i <= rainRecordCount; i++) {
             RainRecord storage record = rainRecords[i];
             if (
-                keccak256(abi.encodePacked(record.location)) ==
-                keccak256(abi.encodePacked(_location)) &&
+                record.longitude == _longitude &&
+                record.latitude == _latitude &&
                 record.timestamp >= _startTime &&
                 record.timestamp <= _endTime
             ) {
                 total += record.rainfallMM;
             }
         }
+    }
+
+    function getGridRainfallData()
+        external
+        view
+        returns (
+            int256[] memory latitudes,
+            int256[] memory longitudes,
+            uint256[][] memory rainfallData
+        )
+    {
+        latitudes = LATITUDES;
+        longitudes = LONGITUDES;
+
+        rainfallData = new uint256[][](latitudes.length);
+        for (uint i = 0; i < latitudes.length; i++) {
+            rainfallData[i] = new uint256[](longitudes.length);
+
+            for (uint j = 0; j < longitudes.length; j++) {
+                rainfallData[i][j] = getLatestRainfall(
+                    longitudes[j],
+                    latitudes[i]
+                );
+            }
+        }
+
+        return (latitudes, longitudes, rainfallData);
+    }
+
+    function getLatestRainfall(
+        int256 _longitude,
+        int256 _latitude
+    ) public view returns (uint256) {
+        uint256 latestTime = 0;
+        uint256 latestRainfall = 0;
+
+        for (uint256 i = 1; i <= rainRecordCount; i++) {
+            RainRecord storage record = rainRecords[i];
+            if (
+                record.longitude == _longitude &&
+                record.latitude == _latitude &&
+                record.timestamp > latestTime
+            ) {
+                latestTime = record.timestamp;
+                latestRainfall = record.rainfallMM;
+            }
+        }
+
+        return latestRainfall;
     }
 
     function withdraw() external onlyOwner {
