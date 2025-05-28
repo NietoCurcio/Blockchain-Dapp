@@ -24,11 +24,21 @@ contract RainInsurance {
         bool claimed;
     }
 
+    struct InsuranceProduct {
+        string location;
+        uint256 minRainfallThreshold;
+        uint256 maxRainfallThreshold;
+        uint256 premiumMultiplier; // For pricing calculation
+        bool active;
+    }
+
     uint256 public rainRecordCount = 0;
     uint256 public policyCount = 0;
+    uint256 public productCount = 0;
 
     mapping(uint256 => RainRecord) public rainRecords;
     mapping(uint256 => Policy) public policies;
+    mapping(uint256 => InsuranceProduct) public insuranceProducts;
 
     event RainDataSubmitted(
         uint256 indexed id,
@@ -76,26 +86,52 @@ contract RainInsurance {
         );
     }
 
-    function createPolicy(
+    function createInsuranceProduct(
         string memory _location,
-        uint256 _startTime,
-        uint256 _endTime,
         uint256 _minRainfallThreshold,
-        uint256 _maxRainfallThreshold
+        uint256 _maxRainfallThreshold,
+        uint256 _premiumMultiplier
+    ) external onlyOwner {
+        require(
+            _minRainfallThreshold <= _maxRainfallThreshold,
+            "Invalid rainfall thresholds"
+        );
+
+        productCount++;
+        insuranceProducts[productCount] = InsuranceProduct({
+            location: _location,
+            minRainfallThreshold: _minRainfallThreshold,
+            maxRainfallThreshold: _maxRainfallThreshold,
+            premiumMultiplier: _premiumMultiplier,
+            active: true
+        });
+    }
+
+    function createPolicy(
+        uint256 _productId,
+        uint256 _startTime,
+        uint256 _endTime
     ) external payable {
+        InsuranceProduct storage product = insuranceProducts[_productId];
+        require(product.active, "Product not available");
         require(_startTime < _endTime, "Invalid time window");
+        require(
+            _startTime >= block.timestamp,
+            "Start time must be in the future"
+        );
+        require(_endTime <= _startTime + 7 days, "Policy duration too long");
         require(msg.value > 0, "Must pay premium");
 
         policyCount++;
         policies[policyCount] = Policy({
             farmer: msg.sender,
-            location: _location,
+            location: product.location,
             startTime: _startTime,
             endTime: _endTime,
-            minRainfallThreshold: _minRainfallThreshold,
-            maxRainfallThreshold: _maxRainfallThreshold,
+            minRainfallThreshold: product.minRainfallThreshold,
+            maxRainfallThreshold: product.maxRainfallThreshold,
             premium: msg.value,
-            payout: msg.value * 2,
+            payout: msg.value * product.premiumMultiplier,
             claimed: false
         });
 
