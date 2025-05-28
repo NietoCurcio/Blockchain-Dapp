@@ -6,9 +6,10 @@ import "forge-std-1.9.7/console.sol";
 contract RainInsurance {
     address public owner;
 
+    // lat and lon are fixed-point with 4 decimals (multiply by 10000)
     struct GeoCoordinate {
-        int256 longitude; // Stored as fixed-point with 4 decimals (multiply by 10000)
-        int256 latitude; // Stored as fixed-point with 4 decimals (multiply by 10000)
+        int256 longitude;
+        int256 latitude;
     }
 
     int256[] public LATITUDES = [-228010, -230510];
@@ -185,9 +186,7 @@ contract RainInsurance {
         } else if (keccak256(bytes(location)) == keccak256(bytes("RJ-2"))) {
             return (LONGITUDES[1], LATITUDES[0]);
         }
-
         // TODO WE HAVE 6 points,  RJ-1 up to RJ-6
-
         return (LONGITUDES[0], LATITUDES[0]);
     }
 
