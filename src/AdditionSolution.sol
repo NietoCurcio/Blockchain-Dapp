@@ -19,7 +19,7 @@ contract AdditionSolution is ISolution {
 
     // Submit a solution
     function submitSolution() external {
-        address competitionAddress = 0x1234567890AbcdEF1234567890aBcdef12345678; // Replace with actual competition contract address
+        address competitionAddress = 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9; // Replace with actual competition contract address
 
 
         ProgrammingCompetition competition = ProgrammingCompetition(payable(competitionAddress));
