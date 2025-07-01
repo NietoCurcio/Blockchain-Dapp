@@ -9,7 +9,7 @@ const abi = [
     "function increment() external"
 ]
 
-const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+const CONTRACT_ADDRESS = "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e"
 
 export default function Page() {
     const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null)
@@ -21,12 +21,19 @@ export default function Page() {
     }
 
     const sendIncrementTx = async () => {
+        console.log("PASSEI AQUI")
         if (!provider || !signer) {
             alert('Connect your wallet first')
             return
         }
 
         try {
+            console.log(CONTRACT_ADDRESS)
+            const network = await signer.provider?.getNetwork()
+            console.log(network?.chainId)
+            // console.log(network)
+            // const RPC_URL = signer.provider?.provider.
+
             const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer)
             const tx = await contract.increment()
             await tx.wait()
