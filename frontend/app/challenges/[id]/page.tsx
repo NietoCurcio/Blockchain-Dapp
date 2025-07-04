@@ -1,6 +1,4 @@
 'use client'
-import React from 'react';
-import Header from '../../components/Header';
 import { useParams } from 'next/navigation';
 
 // Placeholder challenge data (should be replaced with real data or fetched from contract)
@@ -29,21 +27,19 @@ export default function ChallengeDetailPage() {
 
   if (!challenge) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header />
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
         <main className="max-w-2xl mx-auto py-8 px-4">
-          <h1 className="text-2xl font-bold">Challenge Not Found</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Challenge Not Found</h1>
         </main>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <main className="max-w-2xl mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-4">{challenge.title}</h1>
-        <p className="text-gray-700 mb-6">{challenge.description}</p>
+        <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">{challenge.title}</h1>
+        <p className="text-gray-700 dark:text-gray-300 mb-6">{challenge.description}</p>
         {/* Add more challenge details and interaction here */}
       </main>
     </div>

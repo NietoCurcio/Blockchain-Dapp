@@ -6,7 +6,7 @@ import Link from 'next/link';
 const navItems = [
   { label: 'Home', href: '/' },
   { label: 'My Challenges', href: '/my-challenges' },
-  { label: 'Create Challenge', href: '/create-challenge' },
+  { label: 'Create Challenge', href: '/challenges/new' },
   { label: 'Challenges', href: '/challenges' },
 ];
 

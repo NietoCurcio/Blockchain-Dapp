@@ -1,5 +1,3 @@
-import React from 'react';
-import Header from '../components/Header';
 import Link from 'next/link';
 
 // Placeholder challenge data
@@ -24,7 +22,6 @@ const challenges = [
 export default function ChallengesPage() {
 	return (
 		<div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-			<Header />
 			<main className="max-w-2xl mx-auto py-8 px-4">
 				<h1 className="text-3xl font-bold mb-6 text-center text-gray-900 dark:text-gray-100">
 					Programming Challenges
