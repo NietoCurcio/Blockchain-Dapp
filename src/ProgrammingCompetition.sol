@@ -45,12 +45,6 @@ contract ProgrammingCompetition {
         string calldata title,
         string calldata description
     ) external payable onlyOwner {
-        console.log("PASSEI AQUI");
-        console.log("Test Cases:");
-        for (uint i = 0; i < testCases.length; i++) {
-            console.logBytes(testCases[i]);
-        }
-
         require(
             problems[problemId].expectedResultsHash == bytes32(0),
             "Problem already exists"
@@ -143,6 +137,7 @@ contract ProgrammingCompetition {
     receive() external payable {}
 
     function withdraw() external onlyOwner {
+        // TODO: Lock the prizes for unsolved problems so owner cannot withdraw them
         uint256 balance = address(this).balance;
         require(balance > 0, "No funds to withdraw");
 

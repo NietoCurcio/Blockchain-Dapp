@@ -39,3 +39,29 @@ forge create --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba
 deploy AdditionSolution.sol:
 
 forge create --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 src/AdditionSolution.sol:AdditionSolution --broadcast
+
+##### cast bizus
+
+Balance of ProgrammingCompetition contract:
+
+```sh
+cast balance 0x5FbDB2315678afecb367f032d93F642f64180aa3 --rpc-url http://localhost:8545
+```
+
+Converting wei to ethers:
+
+```sh
+cast --from-wei 1000000000000000000
+```
+
+Withdraw funds from ProgrammingCompetition contract to owner:
+
+```sh
+cast send 0x5FbDB2315678afecb367f032d93F642f64180aa3 "withdraw()()" --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+```
+
+cast call 0x5FbDB2315678afecb367f032d93F642f64180aa3 "number()(uint)" --rpc-url http://localhost:8545
+
+cast send 0x5FbDB2315678afecb367f032d93F642f64180aa3 "increment()()" --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+
+deploy CP.sol:
