@@ -2,18 +2,24 @@
 pragma solidity ^0.8.0;
 
 import "./interfaces/ISolution.sol";
+import "../dependencies/forge-std-1.9.7/src/console.sol";
 
 contract ProgrammingCompetition {
     address public owner;
 
     struct Problem {
-        bytes32 expectedResultsHash; // Combined hash of all test case results
+        address creator;
+        bytes32 expectedResultsHash;
+        string title;
+        string description;
         uint256 prize;
         bool isSolved;
-        bytes[] testCases; // Encoded arguments for each test case
+        bytes[] testCases;
     }
 
     mapping(uint256 => Problem) private problems;
+
+    uint256[] public problemIds;
 
     event ProblemRegistered(uint256 problemId, uint256 prize);
     event SolutionSubmitted(
@@ -35,8 +41,16 @@ contract ProgrammingCompetition {
     function registerProblem(
         uint256 problemId,
         bytes32 expectedResultsHash,
-        bytes[] calldata testCases
+        bytes[] calldata testCases,
+        string calldata title,
+        string calldata description
     ) external payable onlyOwner {
+        console.log("PASSEI AQUI");
+        console.log("Test Cases:");
+        for (uint i = 0; i < testCases.length; i++) {
+            console.logBytes(testCases[i]);
+        }
+
         require(
             problems[problemId].expectedResultsHash == bytes32(0),
             "Problem already exists"
@@ -48,8 +62,13 @@ contract ProgrammingCompetition {
             expectedResultsHash: expectedResultsHash,
             prize: msg.value,
             isSolved: false,
-            testCases: testCases
+            testCases: testCases,
+            title: title,
+            description: description,
+            creator: msg.sender
         });
+
+        problemIds.push(problemId);
 
         emit ProblemRegistered(problemId, msg.value);
     }
@@ -112,6 +131,10 @@ contract ProgrammingCompetition {
         return problems[problemId].expectedResultsHash != bytes32(0);
     }
 
+    function getAllProblemIds() external view returns (uint256[] memory) {
+        return problemIds;
+    }
+
     receive() external payable {}
 
     function withdraw() external onlyOwner {
@@ -122,6 +145,7 @@ contract ProgrammingCompetition {
         require(success, "Withdrawal failed");
     }
 
+    // todo remove it and put under a script
     // Example for preparing test cases for "addition"
     function prepareAdditionProblem() external payable {
         // Create array to hold test cases
@@ -146,6 +170,10 @@ contract ProgrammingCompetition {
         
         // Hash all results together
         bytes32 expectedResultsHash = keccak256(allResults);
+
+        string memory title = "Addition Problem";
+        string memory description = "Solve the addition of two numbers. The expected results are the sum of the inputs provided in the test cases.";
+        
         
         // Register the problem
         // ProgrammingCompetition competition = ProgrammingCompetition(competitionAddress);
@@ -153,7 +181,9 @@ contract ProgrammingCompetition {
         competition.registerProblem{value: 0.1 ether}(
             1, // problemId
             expectedResultsHash,
-            testCases
+            testCases,
+            title,
+            description
         );
     }
 }

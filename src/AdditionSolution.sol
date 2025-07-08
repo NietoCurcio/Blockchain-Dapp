@@ -6,7 +6,7 @@ import "./ProgrammingCompetition.sol";
 
 
 contract AdditionSolution is ISolution {
-    function solution(bytes calldata args) external view override returns (bytes memory) {
+    function solution(bytes calldata args) external pure override returns (bytes memory) {
         // Decode the two numbers from the input
         (uint a, uint b) = abi.decode(args, (uint, uint));
         
@@ -19,7 +19,8 @@ contract AdditionSolution is ISolution {
 
     // Submit a solution
     function submitSolution() external {
-        address competitionAddress = 0x5FC8d32690cc91D4c39d9d3abcBD16989F875707; // Replace with actual competition contract address
+       // Replace with actual competition contract address
+        address competitionAddress = 0x5FbDB2315678afecb367f032d93F642f64180aa3;
 
 
         ProgrammingCompetition competition = ProgrammingCompetition(payable(competitionAddress));

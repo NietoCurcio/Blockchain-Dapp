@@ -2,5 +2,5 @@
 pragma solidity ^0.8.13;
 
 interface ISolution {
-    function solution(bytes calldata args) external view returns (bytes memory);
+    function solution(bytes calldata args) external pure returns (bytes memory);
 }
