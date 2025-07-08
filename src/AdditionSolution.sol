@@ -28,7 +28,6 @@ contract AdditionSolution is ISolution {
     }
 
     function submitSolution() external {
-        console.log("Submitting solution from:", msg.sender);
         address competitionAddress = 0x5FbDB2315678afecb367f032d93F642f64180aa3;
 
         ProgrammingCompetition competition = ProgrammingCompetition(payable(competitionAddress));
@@ -36,7 +35,6 @@ contract AdditionSolution is ISolution {
         uint problemId = 1;
         address mySolutionContract = address(this);
 
-        console.log("Evaluating solution for problem ID:", problemId);
         competition.evaluateSolution(problemId, mySolutionContract);
     }
 

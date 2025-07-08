@@ -21,20 +21,6 @@ contract DeployAndSetup is Script {
     }
 
     function registerAdditionProblem(ProgrammingCompetition competition) internal {
-        (bytes[] memory testCases, bytes32 expectedResultsHash, string memory title, string memory description) = getAdditionProblemData();
-        vm.startBroadcast();
-        competition.registerProblem{value: 100000000 ether}(
-            1,
-            expectedResultsHash,
-            testCases,
-            title,
-            description
-        );
-        vm.stopBroadcast();
-        console.log("Addition problem registered.");
-    }
-
-    function getAdditionProblemData() internal pure returns (bytes[] memory, bytes32, string memory, string memory) {
         bytes[] memory testCases = new bytes[](3);
         testCases[0] = abi.encode(1, 1);
         testCases[1] = abi.encode(2, 2);
@@ -49,7 +35,16 @@ contract DeployAndSetup is Script {
         string memory title = "Addition Problem";
         string memory description = "Solve the addition of two numbers. The expected results are the sum of the inputs provided in the test cases. The solution function receives a bytes args parameter, which should be decoded as two uints: (uint a, uint b) = abi.decode(args, (uint, uint));";
 
-        return (testCases, expectedResultsHash, title, description);
+        vm.startBroadcast();
+        competition.registerProblem{value: 100000000 ether}(
+            1,
+            expectedResultsHash,
+            testCases,
+            title,
+            description
+        );
+        vm.stopBroadcast();
+        console.log("Addition problem registered.");
     }
 
     function deployAdditionSolution() internal returns (AdditionSolution) {
