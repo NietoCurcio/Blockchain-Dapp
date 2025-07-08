@@ -74,6 +74,7 @@ contract ProgrammingCompetition {
     }
 
     function evaluateSolution(uint256 problemId, address solutionContract) external {
+        console.log("Evaluating solution for problem ID:", problemId);
         Problem storage problem = problems[problemId];
 
         require(
@@ -105,10 +106,14 @@ contract ProgrammingCompetition {
         bytes32 resultsHash = keccak256(allResults);
         bool correct = (resultsHash == problem.expectedResultsHash);
 
+        console.log("Expected Results Hash:");
+        console.logBytes32(problem.expectedResultsHash);
+        console.logBytes32(resultsHash);
+        console.log("Solution is correct:", correct);
+
         if (correct) {
             problem.isSolved = true;
             uint256 prizeAmount = problem.prize;
-            problem.prize = 0;
 
             (bool success, ) = msg.sender.call{value: prizeAmount}("");
             require(success, "Prize transfer failed");

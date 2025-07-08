@@ -2,33 +2,46 @@
 pragma solidity ^0.8.13;
 
 import "./interfaces/ISolution.sol";
+import "../dependencies/forge-std-1.9.7/src/console.sol";
 import "./ProgrammingCompetition.sol";
 
 
 contract AdditionSolution is ISolution {
+    address public owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not owner");
+        _;
+    }
+
+
     function solution(bytes calldata args) external pure override returns (bytes memory) {
-        // Decode the two numbers from the input
         (uint a, uint b) = abi.decode(args, (uint, uint));
         
-        // Calculate the result
         uint result = a + b;
         
-        // Return the encoded result
         return abi.encode(result);
     }
 
-    // Submit a solution
     function submitSolution() external {
-       // Replace with actual competition contract address
+        console.log("Submitting solution from:", msg.sender);
         address competitionAddress = 0x5FbDB2315678afecb367f032d93F642f64180aa3;
 
-
         ProgrammingCompetition competition = ProgrammingCompetition(payable(competitionAddress));
-        competition.evaluateSolution(
-            1, // problemId
-            // address(mySolutionContract)
-            address(this) // This contract's address
-        );
+
+        uint problemId = 1;
+        address mySolutionContract = address(this);
+
+        console.log("Evaluating solution for problem ID:", problemId);
+        competition.evaluateSolution(problemId, mySolutionContract);
+    }
+
+    function withdraw() external onlyOwner {
+        payable(owner).transfer(address(this).balance);
     }
 
     receive() external payable {}

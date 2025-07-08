@@ -27,3 +27,15 @@ forge create --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba
 # Deployed to: 0x5FbDB2315678afecb367f032d93F642f64180aa3
 # Transaction hash: 0x7b6701e4a540faac9dde27f1b53590374d5882628a93e9068390bcc7a68561b3
 ```
+
+anvil --balance 9999999999999999999
+
+forge script script/DeployAndSetup.s.sol:DeployAndSetup --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast
+
+deploy CP.sol:
+
+forge create --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 src/ProgrammingCompetition.sol:ProgrammingCompetition --broadcast
+
+deploy AdditionSolution.sol:
+
+forge create --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 src/AdditionSolution.sol:AdditionSolution --broadcast
