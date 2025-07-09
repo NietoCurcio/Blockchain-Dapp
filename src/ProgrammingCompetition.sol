@@ -81,12 +81,14 @@ contract ProgrammingCompetition {
         
         bytes memory allResults = "";
         bool executionFailed = false;
-        
-        // Run all test cases
+
+        console.log("Running test cases for problem ID:", problemId);
         for (uint i = 0; i < problem.testCases.length && !executionFailed; i++) {
             try solution.solution(problem.testCases[i]) returns (bytes memory result) {
+                console.log("Test case", i);
                 allResults = abi.encodePacked(allResults, result);
             } catch {
+                console.log("Test case", i, "failed with exception");
                 executionFailed = true;
             }
         }
