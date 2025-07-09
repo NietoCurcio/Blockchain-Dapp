@@ -146,46 +146,4 @@ contract ProgrammingCompetition {
         (bool success, ) = owner.call{value: balance}("");
         require(success, "Withdrawal failed");
     }
-
-    // todo remove it and put under a script
-    // Example for preparing test cases for "addition"
-    function prepareAdditionProblem() external payable {
-        // Create array to hold test cases
-        bytes[] memory testCases = new bytes[](3);
-        
-        // Encode the inputs for each test case
-        testCases[0] = abi.encode(1, 1);      // 1+1
-        testCases[1] = abi.encode(2, 2);      // 2+2
-        testCases[2] = abi.encode(5, 7);      // 5+7
-        
-        // Generate the expected results hash
-        bytes memory allResults = "";
-        
-        // For 1+1=2, encode the result
-        allResults = abi.encodePacked(allResults, abi.encode(2));
-        
-        // For 2+2=4, encode the result
-        allResults = abi.encodePacked(allResults, abi.encode(4));
-        
-        // For 5+7=12, encode the result
-        allResults = abi.encodePacked(allResults, abi.encode(12));
-        
-        // Hash all results together
-        bytes32 expectedResultsHash = keccak256(allResults);
-
-        string memory title = "Addition Problem";
-        string memory description = "Solve the addition of two numbers. The expected results are the sum of the inputs provided in the test cases.";
-        
-        
-        // Register the problem
-        // ProgrammingCompetition competition = ProgrammingCompetition(competitionAddress);
-        ProgrammingCompetition competition = ProgrammingCompetition(payable(address(this)));
-        competition.registerProblem{value: 0.1 ether}(
-            1, // problemId
-            expectedResultsHash,
-            testCases,
-            title,
-            description
-        );
-    }
 }
