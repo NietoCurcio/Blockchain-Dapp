@@ -17,7 +17,7 @@ contract ProgrammingCompetition {
         bytes[] testCases;
     }
 
-    mapping(uint256 => Problem) private problems;
+    mapping(uint256 => Problem) public problems;
 
     uint256[] public problemIds;
 
@@ -118,6 +118,27 @@ contract ProgrammingCompetition {
         }
 
         emit SolutionSubmitted(msg.sender, problemId, correct);
+    }
+
+    function getProblem(uint256 problemId) external view returns (
+        address creator,
+        bytes32 expectedResultsHash,
+        string memory title,
+        string memory description,
+        uint256 prize,
+        bool isSolved,
+        bytes[] memory testCases
+    ) {
+        Problem storage problem = problems[problemId];
+        return (
+            problem.creator,
+            problem.expectedResultsHash,
+            problem.title,
+            problem.description,
+            problem.prize,
+            problem.isSolved,
+            problem.testCases
+        );
     }
 
     function getProblemPrize(uint256 problemId) external view returns (uint256) {
