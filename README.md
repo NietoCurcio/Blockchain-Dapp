@@ -38,11 +38,11 @@ forge build
 forge test
 ```
 
-### 5. [Optional] Deploy only the ProgrammingCompetition contract
+<!-- ### 5. [Optional] Deploy only the ProgrammingCompetition contract
 
 ```sh
 forge create --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 src/ProgrammingCompetition.sol:ProgrammingCompetition --broadcast
-```
+``` -->
 
 ### 6. Deploy all problems and solutions (scripted)
 
@@ -63,6 +63,19 @@ forge script script/DeployAndSetup.s.sol:DeployAndSetup --rpc-url http://localho
 - Withdraw funds (owner only):
   ```sh
   cast send 0x5FbDB2315678afecb367f032d93F642f64180aa3 "withdraw()()" --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+  ```
+- call problemsId view:
+  ```sh
+  cast call 0x5FbDB2315678afecb367f032d93F642f64180aa3 "getAllProblemIds()(uint256[])" --rpc-url http://localhost:8545
+  ```
+
+- check the balance of the solutioner:
+  ```sh
+  cast balance 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 --rpc-url http://localhost:8545
+  ```
+- withdraw from additionSolution:
+  ```sh
+  cast send 0x8464135c8F25Da09e49BC8782676a84730C318bC "withdraw()()" --rpc-url http://localhost:8545 --private-key 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
   ```
 
 ---

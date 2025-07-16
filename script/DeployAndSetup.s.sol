@@ -177,11 +177,22 @@ contract DeployAndSetup is Script {
         testCases[1] = abi.encode(2, 2);
         testCases[2] = abi.encode(5, 7);
 
+        for (uint i = 0; i < testCases.length; i++) {
+            console.log(string(abi.encodePacked("test_case[", i, "]: ")));
+            console.logBytes(testCases[i]);
+        }
+
         bytes memory allResults = "";
-        allResults = abi.encodePacked(allResults, abi.encode(2));
-        allResults = abi.encodePacked(allResults, abi.encode(4));
-        allResults = abi.encodePacked(allResults, abi.encode(12));
+        bytes memory expectedResult0 = abi.encode(2);
+        bytes memory expectedResult1 = abi.encode(4);
+        bytes memory expectedResult2 = abi.encode(12);
+        allResults = abi.encodePacked(allResults, expectedResult0);
+        allResults = abi.encodePacked(allResults, expectedResult1);
+        allResults = abi.encodePacked(allResults, expectedResult2);
+
         bytes32 expectedResultsHash = keccak256(allResults);
+        console.log("expectedResultsHash:");
+        console.logBytes32(expectedResultsHash);
 
         string memory title = "Addition Problem";
         string memory description = "Solve the addition of two numbers. The expected results are the sum of the inputs provided in the test cases. The solution function receives a bytes args parameter, which should be decoded as two uints: (uint a, uint b) = abi.decode(args, (uint, uint));";
