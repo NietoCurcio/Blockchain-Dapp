@@ -49,6 +49,12 @@ contract DeployAndSetup is Script {
         testCases[1] = abi.encode(nodes2);
         testCases[2] = abi.encode(nodes3);
 
+        console.log("testes for postorder");
+        for (uint i = 0; i < testCases.length; i++) {
+            console.log(string(abi.encodePacked("test_case[", i, "]: ")));
+            console.logBytes(testCases[i]);
+        }
+
         bytes memory allResults = "";
         allResults = abi.encodePacked(allResults, abi.encode(new int256[](6)));
         allResults = abi.encodePacked(allResults, abi.encode(new int256[](3)));
@@ -68,6 +74,9 @@ contract DeployAndSetup is Script {
                 abi.encode([int256(10)])
             )
         );
+
+        console.log("expectedResultsHash postorder:");
+        console.logBytes32(expectedResultsHash);
 
         string memory title = "PostOrder Traversal";
         string memory description = "Given a binary tree encoded as an array of [value, leftIdx, rightIdx] (with -1 for null), return the postorder traversal as an array of ints. The solution function receives a bytes args parameter, which should be decoded as int256[3][] memory nodes = abi.decode(args, (int256[3][]));";
@@ -130,11 +139,20 @@ contract DeployAndSetup is Script {
         testCases[1] = abi.encode(arr2);
         testCases[2] = abi.encode(arr3);
 
+        console.log("testes for maxvalue");
+        for (uint i = 0; i < testCases.length; i++) {
+            console.log(string(abi.encodePacked("test_case[", i, "]: ")));
+            console.logBytes(testCases[i]);
+        }
+
         bytes memory allResults = "";
         allResults = abi.encodePacked(allResults, abi.encode(5));
         allResults = abi.encodePacked(allResults, abi.encode(80));
         allResults = abi.encodePacked(allResults, abi.encode(50));
         bytes32 expectedResultsHash = keccak256(allResults);
+
+        console.log("expectedResultsHash maxvalue:");
+        console.logBytes32(expectedResultsHash);
 
         string memory title = "Find Maximum";
         string memory description = "Find the maximum value in an array. The solution function receives a bytes args parameter, which should be decoded as a uint[]: uint[] memory arr = abi.decode(args, (uint[])); Return the maximum value in the array.";
